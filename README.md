@@ -1,91 +1,149 @@
-# 2026 신입 Back-End 개발자 코딩 과제 - 간단한 CMS REST API
+# CMS REST API
 
-2026년도 신입 Back-End 개발자 코딩 과제입니다.
-간단한 CMS(Contents Management System) REST API 를 구현하는 것이 목표입니다.
+Spring Boot 기반의 간단한 CMS(Content Management System) REST API입니다.
 
-외부 자료 검색 및 AI 도구 사용을 허용합니다. 다만, 제출물에 활용한 도구와 방식을 간단하게 명시해주시기 바랍니다.
+---
 
-## Spec
+## 프로젝트 실행 방법
 
-- Java 25
-- Spring Boot 4
-- Spring Security
-- JPA
-- H2 (db)
-- Lombok (필요시)
+### 사전 요구사항
+- Java 25 이상
+- Gradle
 
-## 과제 목표
+### 실행
+```bash
+./gradlew bootRun
+```
 
-- 간단한 CMS 콘텐츠 관리 API 를 구현 해주세요.
-- DB Schema 모두 구현해주세요.
-- DB 는 h2 를 사용해주세요.
-- 가능한 예외처리도 구현해주세요.
-- 필요하다고 생각되는 부분은 추가로 구현해도 됩니다.
+윈도우의 경우:
+```bash
+gradlew.bat bootRun
+```
 
-## 데이터 모델
+### 접속 주소
 
-### Contents
+| 항목 | URL |
+|------|-----|
+| API 서버 | http://localhost:8080 |
+| Swagger UI | http://localhost:8080/swagger-ui.html |
+| H2 Console | http://localhost:8080/h2-console |
 
-| 컬럼명                | 이름  | 설명          | 데이터 타입                      | 비고 |
-|--------------------|-----|-------------|-----------------------------|----|
-| id                 | 아이디 | 고유 아이디      | bigint primary key not null |    |
-| title              | 제목  | contents 제목 | varchar(100) not null       |    |
-| description        | 내용  | contents 내용 | text                        |    |
-| view_count         | 조회수 | 조회수         | bigint not null             |    |
-| created_date       | 생성일 | 생성한 날짜      | timestamp                   |    |
-| created_by         | 생성자 | 생성한 사용자     | varchar(50) not null        |    |
-| last_modified_date | 수정일 | 마지막 수정일     | timestamp                   |    |
-| last_modified_by   | 수정자 | 마지막 수정한 사용자 | varchar(50)                 |    |
+### H2 Console 접속 정보
+- JDBC URL: `jdbc:h2:mem:test`
+- Username: `sa`
+- Password: *(없음)*
 
-## 구현 기능
+---
 
-### 콘텐츠 관련 CRUD
+## 로그인 방식
 
-시스템에 등록된 콘텐츠에 대한 CRUD 를 필수로 구현해주세요.
+**JWT (JSON Web Token) Bearer 인증** 방식을 사용합니다.
 
-#### 기능
-- 콘텐츠 추가
-- 콘텐츠 목록 조회
-  - 반드시 페이징 처리를 해주세요.
-- 콘텐츠 상세 조회
-- 콘텐츠 수정
-- 콘텐츠 삭제
+1. `POST /api/auth/register` 로 회원가입
+2. `POST /api/auth/login` 으로 로그인 후 `accessToken` 발급
+3. 이후 인증이 필요한 API 호출 시 헤더에 포함
+```
+   Authorization: Bearer <accessToken>
+```
+4. 토큰 유효 기간: **24시간**
 
+---
 
-### 로그인
-- Spring Security 를 이용해서 로그인을 필수로 구현해주세요.
-- 로그인 방식은 자유롭게 선택하여 구현하되, `README.md` 에 명시해주세요
-- Role
-    - 관리자(ADMIN)
-    - 사용자(USER)
+## 구현 내용
+
+### 콘텐츠 CRUD
+| 기능 | 메서드 | URL |
+|------|--------|-----|
+| 콘텐츠 생성 | POST | `/api/contents` |
+| 콘텐츠 목록 조회 (페이징) | GET | `/api/contents` |
+| 콘텐츠 상세 조회 | GET | `/api/contents/{id}` |
+| 콘텐츠 수정 | PUT | `/api/contents/{id}` |
+| 콘텐츠 삭제 | DELETE | `/api/contents/{id}` |
+
+### 로그인 / 회원가입
+| 기능 | 메서드 | URL |
+|------|--------|-----|
+| 로그인 | POST | `/api/auth/login` |
+| 회원가입 | POST | `/api/auth/register` |
 
 ### 접근 권한
+| API | 비인증 | USER | ADMIN |
+|-----|--------|------|-------|
+| 로그인 / 회원가입 | ✅ | ✅ | ✅ |
+| 콘텐츠 목록 / 상세 조회 | ✅ | ✅ | ✅ |
+| 콘텐츠 생성 | ❌ | ✅ | ✅ |
+| 콘텐츠 수정 / 삭제 | ❌ | 본인만 | ✅ 전체 |
 
-- 접근 권한을 필수로 구현해주세요.
-- 콘텐츠 생성자 본인만 수정 + 삭제 가능하게 구현해주세요.
-- 단, 관리자(ADMIN) 인 경우 모든 콘텐츠에 대해 수정 + 삭제할 수 있게 구현해주세요.
+---
 
-## 제출
+## 추가 구현 기능
 
-### 기한
+| 기능 | 설명 |
+|------|------|
+| 회원가입 API | `POST /api/auth/register` — 가입 후 JWT 자동 발급 |
+| 제목 검색 | `GET /api/contents?title=검색어` — 부분 일치, 대소문자 무시 |
+| 조회수 자동 증가 | 상세 조회 시마다 `view_count` + 1 |
+| JPA Auditing | 생성자 / 수정자 / 생성일 / 수정일 자동 기록 |
+| 공통 응답 포맷 | `ApiResponse<T>` — success, message, data 구조 통일 |
+| 전역 예외 처리 | `GlobalExceptionHandler` — 에러 응답 일관 처리 |
+| Swagger UI | `/swagger-ui.html` — Bearer 토큰 인증 포함 문서화 |
+| p6spy | SQL 쿼리 로깅 |
 
-- 본 메일 수신 후 26.03.09(월) 오후 3시까지 (주)맑은기술 채용 메일(recruit@malgn.com) 로 보내주시기 바랍니다. 
+---
 
-### 제출물
+## DB Schema
+```sql
+CREATE TABLE users (
+    id       BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50)  NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role     VARCHAR(20)  NOT NULL
+);
 
-- 소스코드 (Zip 또는 Github repository 링크)
-- README.md
-    - 추가 내용이나 제출물 관련 내용을 추가헤주세요.
-    - 사용한 AI 또는 참고 자료가 있다면 간단히 명시
-- REST API Docs
-    - 자유롭게 작성해서 첨부해주세요.
+CREATE TABLE contents (
+    id                 BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    title              VARCHAR(100) NOT NULL,
+    description        TEXT,
+    view_count         BIGINT NOT NULL DEFAULT 0,
+    created_date       TIMESTAMP,
+    created_by         VARCHAR(50) NOT NULL,
+    last_modified_date TIMESTAMP,
+    last_modified_by   VARCHAR(50)
+);
+```
 
+---
 
+## 프로젝트 구조
+```
+src/main/java/com/malgn/
+├── domain/
+│   ├── user/
+│   │   ├── controller/   # AuthController
+│   │   ├── dto/          # AuthDto
+│   │   ├── entity/       # User
+│   │   ├── repository/   # UserRepository
+│   │   └── service/      # AuthService
+│   └── content/
+│       ├── controller/   # ContentController
+│       ├── dto/          # ContentDto
+│       ├── entity/       # Content
+│       ├── repository/   # ContentRepository
+│       └── service/      # ContentService
+├── configure/
+│   ├── security/         # SecurityConfiguration
+│   ├── AppConfiguration  # JPA Auditing
+│   └── SwaggerConfiguration
+└── global/
+    ├── dto/              # ApiResponse
+    ├── exception/        # GlobalExceptionHandler
+    └── security/         # JWT 관련 클래스
+```
 
+---
 
+## 사용한 AI 도구
 
-
-
-
-
-
+| 도구 | 활용 방식 |
+|------|----------|
+| Claude | 프로젝트 구현 보조. 에러 해결에 활용. 생성된 코드는 검토 후 적용. |
