@@ -47,3 +47,18 @@ logging:
     root: info
     web: info
     com.malgn: debug
+
+
+## jwt
+jwt:
+  secret: cms-api-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
+  expiration: 86400000
+
+## swagger
+## springdoc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+  enable-querydsl: false
