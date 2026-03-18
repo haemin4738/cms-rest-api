@@ -49,6 +49,8 @@ dependencies {
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:2.0.0'
 
     // lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
@@ -56,6 +58,16 @@ dependencies {
     implementation("io.github.openfeign.querydsl:querydsl-jpa:${queryDslVersion}")
     annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
     testAnnotationProcessor("io.github.openfeign.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    // SpringDoc + QueryDSL 충돌 방지
+    implementation ('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6') {
+        exclude group: 'com.querydsl', module: 'querydsl-core'
+    }
 }
 
 tasks.named('test') {
