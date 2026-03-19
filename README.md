@@ -134,6 +134,7 @@ src/main/java/com/malgn/
 │   ├── security/         # SecurityConfiguration
 │   ├── AppConfiguration  # JPA Auditing
 │   └── SwaggerConfiguration
+|   
 └── global/
     ├── dto/              # ApiResponse
     ├── exception/        # GlobalExceptionHandler
@@ -147,3 +148,4 @@ src/main/java/com/malgn/
 | 도구 | 활용 방식 |
 |------|----------|
 | Claude | 프로젝트 구현 보조. 에러 해결에 활용. 생성된 코드는 검토 후 적용. |
+| Spring 공식 문서 | Spring Boot, JPA 사용 참조. |
