@@ -20,6 +20,18 @@ Spring Boot 기반의 간단한 CMS(Content Management System) REST API입니다
 gradlew.bat bootRun
 ```
 
+## 테스트 실행
+```bash
+./gradlew test
+```
+
+| 테스트 클래스 | 설명 |
+|------|------|
+| `ContentServiceTest` | 서비스 레이어 단위 테스트 (Mockito) |
+| `ContentControllerTest` | CRUD 및 권한 검증 통합 테스트 (MockMvc) |
+| `AuthControllerTest` | 로그인 / 회원가입 통합 테스트 (MockMvc) |
+
+
 ### 접속 주소
 
 | 항목 | URL |
@@ -89,6 +101,10 @@ gradlew.bat bootRun
 | 전역 예외 처리 | `GlobalExceptionHandler` — 에러 응답 일관 처리 |
 | Swagger UI | `/swagger-ui.html` — Bearer 토큰 인증 포함 문서화 |
 | p6spy | SQL 쿼리 로깅 |
+| 입력값 검증 | `@Valid` + Hibernate Validator — title 빈값, 100자 초과 시 400 반환 |
+| 토큰 만료 에러 개선 | `JwtAuthenticationEntryPoint`, `JwtAccessDeniedHandler` — 401/403 JSON 응답 |
+| 정렬 옵션 | `sort=viewCount,desc` 등 URL 파라미터로 정렬 가능 |
+
 
 ---
 
