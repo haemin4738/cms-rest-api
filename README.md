@@ -45,6 +45,11 @@ gradlew.bat bootRun
 - Username: `sa`
 - Password: *(없음)*
 
+## API 문서
+
+Swagger UI를 통해 API 문서를 확인할 수 있습니다.
+- 앱 실행 후 접속하여 Bearer 토큰 인증 포함 전체 API를 확인하고 테스트할 수 있습니다.
+
 ---
 
 ## 로그인 방식
