@@ -56,6 +56,7 @@ gradlew.bat bootRun
 |------|--------|-----|
 | 콘텐츠 생성 | POST | `/api/contents` |
 | 콘텐츠 목록 조회 (페이징) | GET | `/api/contents` |
+| 검색 + 정렬 함께 | `GET /api/contents?title=스프링&sort=viewCount,desc` |
 | 콘텐츠 상세 조회 | GET | `/api/contents/{id}` |
 | 콘텐츠 수정 | PUT | `/api/contents/{id}` |
 | 콘텐츠 삭제 | DELETE | `/api/contents/{id}` |
@@ -76,7 +77,7 @@ gradlew.bat bootRun
 
 ---
 
-## 추가 구현 기능
+## 구현 기능
 
 | 기능 | 설명 |
 |------|------|
