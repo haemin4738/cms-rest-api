@@ -1,5 +1,7 @@
 package com.malgn.configure.security;
 
+import com.malgn.global.security.JwtAccessDeniedHandler;
+import com.malgn.global.security.JwtAuthenticationEntryPoint;
 import com.malgn.global.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,8 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -52,6 +56,10 @@ public class SecurityConfiguration {
         );
 
         http.authenticationProvider(authenticationProvider());
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+        );
 
         // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
         http.addFilterBefore(jwtAuthenticationFilter,
