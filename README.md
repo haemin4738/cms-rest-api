@@ -89,21 +89,37 @@ gradlew.bat bootRun
 
 ---
 
-## 구현 기능
+## 기본 구현 기능 (과제 요구사항)
+
+| 기능 | 설명 |
+|------|------|
+| 콘텐츠 추가 | `POST /api/contents` |
+| 콘텐츠 목록 조회 (페이징) | `GET /api/contents` — 페이징 처리 |
+| 콘텐츠 상세 조회 | `GET /api/contents/{id}` |
+| 콘텐츠 수정 | `PUT /api/contents/{id}` — 작성자 본인만 가능 |
+| 콘텐츠 삭제 | `DELETE /api/contents/{id}` — 작성자 본인만 가능 |
+| JWT 로그인 | `POST /api/auth/login` — Spring Security + JWT |
+| 회원 역할 구분 | ADMIN / USER 역할 기반 접근 제어 |
+| ADMIN 권한 | 모든 콘텐츠 수정 및 삭제 가능 |
+| 예외 처리 | `GlobalExceptionHandler` — 에러 응답 일관 처리 |
+
+---
+
+## 추가 구현 기능
 
 | 기능 | 설명 |
 |------|------|
 | 회원가입 API | `POST /api/auth/register` — 가입 후 JWT 자동 발급 |
 | 제목 검색 | `GET /api/contents?title=검색어` — 부분 일치, 대소문자 무시 |
+| 정렬 옵션 | `sort=viewCount,desc` 등 URL 파라미터로 정렬 가능 |
 | 조회수 자동 증가 | 상세 조회 시마다 `view_count` + 1 |
 | JPA Auditing | 생성자 / 수정자 / 생성일 / 수정일 자동 기록 |
 | 공통 응답 포맷 | `ApiResponse<T>` — success, message, data 구조 통일 |
-| 전역 예외 처리 | `GlobalExceptionHandler` — 에러 응답 일관 처리 |
-| Swagger UI | `/swagger-ui.html` — Bearer 토큰 인증 포함 문서화 |
-| p6spy | SQL 쿼리 로깅 |
-| 입력값 검증 | `@Valid` + Hibernate Validator — title 빈값, 100자 초과 시 400 반환 |
-| 토큰 만료 에러 개선 | `JwtAuthenticationEntryPoint`, `JwtAccessDeniedHandler` — 401/403 JSON 응답 |
-| 정렬 옵션 | `sort=viewCount,desc` 등 URL 파라미터로 정렬 가능 |
+| 입력값 검증 | Hibernate Validator — title 빈값, 100자 초과 시 400 반환 |
+| 토큰 에러 응답 개선 | 미인증 401, 권한 없음 403 JSON 응답 |
+| Swagger UI | `/swagger-ui.html` — Bearer 토큰 인증 포함 API 문서 |
+| 단위 테스트 | Mockito 기반 서비스 레이어 테스트 |
+| 통합 테스트 | MockMvc 기반 CRUD 및 권한 시나리오 테스트 |
 
 
 ---
@@ -166,3 +182,4 @@ src/main/java/com/malgn/
 |------|----------|
 | Claude | 프로젝트 구현 보조. 에러 해결에 활용. 생성된 코드는 검토 후 적용. |
 | Spring 공식 문서 | Spring Boot, JPA 사용 참조. |
+
