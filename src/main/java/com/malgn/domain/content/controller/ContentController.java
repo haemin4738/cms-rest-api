@@ -39,7 +39,8 @@ public class ContentController {
 
     @GetMapping
     @Operation(summary = "콘텐츠 목록 조회",
-            description = "페이징 처리. title 파라미터로 제목 검색 가능")
+            description = "페이징 처리. title로 검색, sort로 정렬 가능\n\n" +
+                    "정렬 예시: `sort=createdDate,desc` / `sort=viewCount,desc` / `sort=title,asc`")
     public ResponseEntity<ApiResponse<Page<ContentDto.SummaryResponse>>> findAll(
             @RequestParam(required = false) String title,
             @PageableDefault(size = 10, sort = "createdDate",
